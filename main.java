@@ -202,3 +202,54 @@ public final class VoltDosJarvisLab {
         return Collections.unmodifiableMap(m);
     }
 
+    public static long saturatingAdd(long a, long b) {
+        try {
+            return Math.addExact(a, b);
+        } catch (ArithmeticException ex) {
+            return Long.MAX_VALUE;
+        }
+    }
+
+    public static long boundedMul(long a, long b, long cap) {
+        if (a == 0 || b == 0) {
+            return 0;
+        }
+        if (a > cap / b) {
+            return cap;
+        }
+        return a * b;
+    }
+
+    public static long clamp(long v, long lo, long hi) {
+        return Math.max(lo, Math.min(hi, v));
+    }
+
+    public static String topicHash(String label) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] h = md.digest(label.toLowerCase(Locale.ROOT).getBytes(StandardCharsets.UTF_8));
+        StringBuilder sb = new StringBuilder(2 + h.length * 2);
+        sb.append("0x");
+        for (byte b : h) {
+            sb.append(String.format(Locale.ROOT, "%02x", b));
+        }
+        return sb.substring(0, Math.min(sb.length(), 66));
+    }
+
+    public static final class TraceJournal {
+        private final List<String> lines = new ArrayList<>();
+        private final AtomicLong seq = new AtomicLong();
+
+        public void append(String line) {
+            lines.add(seq.incrementAndGet() + ": " + Instant.now() + " " + line);
+        }
+
+        public List<String> tail(int n) {
+            int size = lines.size();
+            if (n >= size) {
+                return List.copyOf(lines);
+            }
+            return List.copyOf(lines.subList(size - n, size));
+        }
+    }
+
+    public static final class PedagogySimulator {
