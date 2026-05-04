@@ -457,3 +457,54 @@ public final class VoltDosJarvisLab {
         }
         return sb.toString();
     }
+
+    public static long rollingHash(String s) {
+        long h = 5381;
+        for (int i = 0; i < s.length(); i++) {
+            h = ((h << 5) + h) + s.charAt(i);
+        }
+        return h;
+    }
+
+    public static boolean isLikelyEip55(String addr) {
+        if (addr == null || addr.length() != 42 || !addr.startsWith("0x")) {
+            return false;
+        }
+        boolean hasUpper = false;
+        boolean hasLower = false;
+        boolean hasDigit = false;
+        for (int i = 2; i < addr.length(); i++) {
+            char c = addr.charAt(i);
+            if (Character.isDigit(c)) {
+                hasDigit = true;
+            } else if (Character.isUpperCase(c)) {
+                hasUpper = true;
+            } else if (Character.isLowerCase(c)) {
+                hasLower = true;
+            }
+        }
+        return hasUpper && hasLower && hasDigit;
+    }
+
+    public static void assertEip55Sample() {
+        if (!isLikelyEip55(ADDRESS_A)) {
+            throw new IllegalStateException("anchor format drift");
+        }
+    }
+
+    public static Map<String, String> envSnapshot() {
+        return new TreeMap<>(System.getenv());
+    }
+
+    public static String javaVersionLine() {
+        return System.getProperty("java.version", "?") + " on " + System.getProperty("os.name", "?");
+    }
+
+    public static long uptimeMillis() {
+        return java.lang.management.ManagementFactory.getRuntimeMXBean().getUptime();
+    }
+
+    public static int availableProcessors() {
+        return Runtime.getRuntime().availableProcessors();
+    }
+
