@@ -559,3 +559,54 @@ public final class VoltDosJarvisLab {
         return "lesson " + l.id() + " " + l.title() + " gasHint=" + l.gasHint();
     }
 
+    public static List<String> expandTemplates(int n) {
+        List<String> lines = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) {
+            lines.add("template-" + i + "-volt");
+        }
+        return lines;
+    }
+
+    public static int levenshtein(String a, String b) {
+        int[][] dp = new int[a.length() + 1][b.length() + 1];
+        for (int i = 0; i <= a.length(); i++) {
+            dp[i][0] = i;
+        }
+        for (int j = 0; j <= b.length(); j++) {
+            dp[0][j] = j;
+        }
+        for (int i = 1; i <= a.length(); i++) {
+            for (int j = 1; j <= b.length(); j++) {
+                int cost = a.charAt(i - 1) == b.charAt(j - 1) ? 0 : 1;
+                dp[i][j] = Math.min(Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1), dp[i - 1][j - 1] + cost);
+            }
+        }
+        return dp[a.length()][b.length()];
+    }
+
+    public static boolean isNearDuplicate(String a, String b, int maxDist) {
+        return levenshtein(a, b) <= maxDist;
+    }
+
+    public static long mix64(long z) {
+        z = (z ^ (z >>> 33)) * 0xff51afd7ed558ccdL;
+        z = (z ^ (z >>> 33)) * 0xc4ceb9fe1a85ec53L;
+        return z ^ (z >>> 33);
+    }
+
+    public static List<Long> deterministicNoise(int count, long seed) {
+        List<Long> out = new ArrayList<>(count);
+        long z = seed;
+        for (int i = 0; i < count; i++) {
+            z = mix64(z ^ i);
+            out.add(z);
+        }
+        return out;
+    }
+
+    public static String safeFileName(String raw) {
+        return raw.replaceAll("[^a-zA-Z0-9._-]", "_");
+    }
+
+    public static int parseIntOr(String s, int dflt) {
+        try {
