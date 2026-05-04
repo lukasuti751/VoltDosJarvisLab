@@ -916,3 +916,42 @@ public final class VoltDosJarvisLab {
     public static String padRight(String s, int width, char c) {
         if (s.length() >= width) {
             return s;
+        }
+        return s + repeatChar(c, width - s.length());
+    }
+
+    public static int editScore(String a, String b) {
+        return levenshtein(a, b);
+    }
+
+    public static long mulHighUnsigned(long x, long y) {
+        long xl = x & 0xffffffffL;
+        long xh = x >>> 32;
+        long yl = y & 0xffffffffL;
+        long yh = y >>> 32;
+        long p0 = xl * yl;
+        long p1 = xl * yh;
+        long p2 = xh * yl;
+        long p3 = xh * yh;
+        long carry = (p0 >>> 32) + (p1 & 0xffffffffL) + (p2 & 0xffffffffL);
+        return p3 + (p1 >>> 32) + (p2 >>> 32) + (carry >>> 32);
+    }
+
+    public static String explainTraceVersion() {
+        return "TRACE_VERSION is a curriculum tag; rotate off-chain when forks diverge.";
+    }
+
+    public static String explainDrillSeed() {
+        return "DRILL_SEED seeds deterministic drills for classroom reproducibility.";
+    }
+
+    public static void selfTestQuick() {
+        assertEip55Sample();
+        if (!isSafeGasHint(100_000)) {
+            throw new IllegalStateException("unexpected gas hint classification");
+        }
+        if (saturatingAdd(Long.MAX_VALUE, 1) != Long.MAX_VALUE) {
+            throw new IllegalStateException("saturating add broken");
+        }
+    }
+}
