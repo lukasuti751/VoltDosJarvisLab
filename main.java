@@ -712,3 +712,54 @@ public final class VoltDosJarvisLab {
         return true;
     }
 
+    public static List<Integer> primesUpTo(int limit) {
+        List<Integer> ps = new ArrayList<>();
+        for (int i = 2; i <= limit; i++) {
+            if (isPrimeTrial(i)) {
+                ps.add(i);
+            }
+        }
+        return ps;
+    }
+
+    public static int countBitsSetInRange(int lo, int hi) {
+        int c = 0;
+        for (int v = lo; v <= hi; v++) {
+            c += Integer.bitCount(v);
+        }
+        return c;
+    }
+
+    public static String csvRow(Object... cells) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < cells.length; i++) {
+            if (i > 0) {
+                sb.append(',');
+            }
+            sb.append(cells[i]);
+        }
+        return sb.toString();
+    }
+
+    public static List<String[]> parseCsvSimple(String text) {
+        List<String[]> rows = new ArrayList<>();
+        for (String line : text.split("\n")) {
+            if (!line.isEmpty()) {
+                rows.add(line.split(","));
+            }
+        }
+        return rows;
+    }
+
+    public static String normalizeSpace(String s) {
+        return s.trim().replaceAll("\\s+", " ");
+    }
+
+    public static boolean containsIgnoreCase(String hay, String needle) {
+        return hay.toLowerCase(Locale.ROOT).contains(needle.toLowerCase(Locale.ROOT));
+    }
+
+    public static String reverseWords(String s) {
+        List<String> t = tokenize(s);
+        Collections.reverse(t);
+        return String.join(" ", t);
