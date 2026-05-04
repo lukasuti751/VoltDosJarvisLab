@@ -355,3 +355,54 @@ public final class VoltDosJarvisLab {
         return Integer.compare(a.gasHint(), b.gasHint());
     }
 
+    public static List<LessonRecord> sortedByGas(Map<Integer, LessonRecord> lessons) {
+        return lessons.values().stream().sorted(VoltDosJarvisLab::compareLessons).collect(Collectors.toList());
+    }
+
+    public static boolean isSafeGasHint(int hint) {
+        return hint >= 21_000 && hint <= 30_000_000;
+    }
+
+    public static int nextFib(int a, int b) {
+        return saturatingAdd(a, b) > Integer.MAX_VALUE - 10 ? Integer.MAX_VALUE - 10 : a + b;
+    }
+
+    public static List<Integer> fibWindow(int startA, int startB, int steps) {
+        List<Integer> out = new ArrayList<>(steps);
+        int x = startA;
+        int y = startB;
+        for (int i = 0; i < steps; i++) {
+            out.add(x);
+            int z = x + y;
+            x = y;
+            y = z;
+        }
+        return out;
+    }
+
+    public static long xorReduce(long[] vals) {
+        long acc = 0;
+        for (long v : vals) {
+            acc ^= v;
+        }
+        return acc;
+    }
+
+    public static long sumBounded(long[] vals, long cap) {
+        long s = 0;
+        for (long v : vals) {
+            s = saturatingAdd(s, v);
+            if (s >= cap) {
+                return cap;
+            }
+        }
+        return s;
+    }
+
+    public static String maskMiddle(String s) {
+        if (s.length() <= 8) {
+            return s;
+        }
+        return s.substring(0, 4) + "…" + s.substring(s.length() - 4);
+    }
+
