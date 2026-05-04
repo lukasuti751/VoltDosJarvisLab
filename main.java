@@ -253,3 +253,54 @@ public final class VoltDosJarvisLab {
     }
 
     public static final class PedagogySimulator {
+        private final Random rng;
+        private final Map<Integer, Double> scores = new HashMap<>();
+
+        public PedagogySimulator(long seed) {
+            this.rng = new Random(seed);
+        }
+
+        public double scoreFor(int learner) {
+            return scores.computeIfAbsent(learner, k -> rng.nextDouble());
+        }
+
+        public TreeMap<String, Double> leaderboard(int n) {
+            TreeMap<String, Double> board = new TreeMap<>(Comparator.reverseOrder());
+            for (int i = 0; i < n; i++) {
+                board.put("L" + i, scoreFor(i));
+            }
+            return board;
+        }
+    }
+
+    public static Optional<Path> locateHtmlSibling() {
+        Path here = Path.of(System.getProperty("user.dir"));
+        Path candidate = here.resolve("winRARAI").resolve("index.html");
+        if (Files.isRegularFile(candidate)) {
+            return Optional.of(candidate);
+        }
+        Path up = here.getParent();
+        if (up != null) {
+            Path c2 = up.resolve("winRARAI").resolve("index.html");
+            if (Files.isRegularFile(c2)) {
+                return Optional.of(c2);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public static List<String> readInteractiveLines() throws IOException {
+        List<String> acc = new ArrayList<>();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+        String line;
+        while ((line = br.readLine()) != null) {
+            acc.add(line);
+        }
+        return acc;
+    }
+
+    public static String summarizeAddresses() {
+        return ADDRESS_A + "|" + ADDRESS_B + "|" + ADDRESS_C;
+    }
+
+    public static List<Integer> facetSeries(int count) {
