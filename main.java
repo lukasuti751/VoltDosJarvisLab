@@ -508,3 +508,54 @@ public final class VoltDosJarvisLab {
         return Runtime.getRuntime().availableProcessors();
     }
 
+    public static long freeMemoryBytes() {
+        Runtime rt = Runtime.getRuntime();
+        return rt.freeMemory();
+    }
+
+    public static long maxMemoryBytes() {
+        return Runtime.getRuntime().maxMemory();
+    }
+
+    public static void gcHint() {
+        Runtime.getRuntime().gc();
+    }
+
+    public static List<String> tokenize(String line) {
+        String[] parts = line.trim().split("\\s+");
+        List<String> out = new ArrayList<>();
+        for (String p : parts) {
+            if (!p.isEmpty()) {
+                out.add(p);
+            }
+        }
+        return out;
+    }
+
+    public static String upperCommand(String line) {
+        List<String> t = tokenize(line);
+        if (t.isEmpty()) {
+            return "";
+        }
+        return t.get(0).toUpperCase(Locale.ROOT);
+    }
+
+    public static Map<String, Integer> rankVerbs(List<String> history) {
+        Map<String, Integer> m = new HashMap<>();
+        for (String h : history) {
+            String v = upperCommand(h);
+            if (!v.isEmpty()) {
+                m.merge(v, 1, Integer::sum);
+            }
+        }
+        return m;
+    }
+
+    public static String describeCohort(CohortRecord c) {
+        return "cohort " + c.id() + " tag=" + c.tag() + " cap=" + c.capacity();
+    }
+
+    public static String describeLesson(LessonRecord l) {
+        return "lesson " + l.id() + " " + l.title() + " gasHint=" + l.gasHint();
+    }
+
