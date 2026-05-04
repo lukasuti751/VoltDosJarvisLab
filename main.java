@@ -406,3 +406,54 @@ public final class VoltDosJarvisLab {
         return s.substring(0, 4) + "…" + s.substring(s.length() - 4);
     }
 
+    public static List<String> splitFields(String line, char delim) {
+        List<String> parts = new ArrayList<>();
+        StringBuilder cur = new StringBuilder();
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+            if (c == delim) {
+                parts.add(cur.toString());
+                cur.setLength(0);
+            } else {
+                cur.append(c);
+            }
+        }
+        parts.add(cur.toString());
+        return parts;
+    }
+
+    public static String joinFields(List<String> parts, char delim) {
+        return parts.stream().collect(Collectors.joining(String.valueOf(delim)));
+    }
+
+    public static int hammingWeight(long x) {
+        return Long.bitCount(x);
+    }
+
+    public static int popcountBytes(byte[] b) {
+        int c = 0;
+        for (byte v : b) {
+            c += Integer.bitCount(v & 0xff);
+        }
+        return c;
+    }
+
+    public static byte[] hexToBytes(String hex) {
+        String h = hex.startsWith("0x") ? hex.substring(2) : hex;
+        int n = h.length() / 2;
+        byte[] out = new byte[n];
+        for (int i = 0; i < n; i++) {
+            int hi = Character.digit(h.charAt(i * 2), 16);
+            int lo = Character.digit(h.charAt(i * 2 + 1), 16);
+            out[i] = (byte) ((hi << 4) + lo);
+        }
+        return out;
+    }
+
+    public static String bytesToHex(byte[] b) {
+        StringBuilder sb = new StringBuilder(b.length * 2);
+        for (byte v : b) {
+            sb.append(String.format(Locale.ROOT, "%02x", v));
+        }
+        return sb.toString();
+    }
