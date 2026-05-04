@@ -763,3 +763,54 @@ public final class VoltDosJarvisLab {
         List<String> t = tokenize(s);
         Collections.reverse(t);
         return String.join(" ", t);
+    }
+
+    public static int countVowels(String s) {
+        String v = "aeiouAEIOU";
+        int c = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (v.indexOf(s.charAt(i)) >= 0) {
+                c++;
+            }
+        }
+        return c;
+    }
+
+    public static String rot13(String s) {
+        StringBuilder sb = new StringBuilder(s.length());
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (ch >= 'a' && ch <= 'z') {
+                char base = 'a';
+                sb.append((char) ((((ch - base) + 13) % 26) + base));
+            } else if (ch >= 'A' && ch <= 'Z') {
+                char base = 'A';
+                sb.append((char) ((((ch - base) + 13) % 26) + base));
+            } else {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
+    }
+
+    public static long checksumAdler32(byte[] data) {
+        int a = 1;
+        int b = 0;
+        for (byte v : data) {
+            a = (a + (v & 0xff)) % 65521;
+            b = (b + a) % 65521;
+        }
+        return ((long) b << 16) | a;
+    }
+
+    public static String stableLessonKey(int id, String salt) {
+        return id + ":" + salt.hashCode();
+    }
+
+    public static Map<Integer, Integer> bucketize(List<Integer> vals, int buckets) {
+        Map<Integer, Integer> m = new TreeMap<>();
+        for (int v : vals) {
+            int b = modPositive(v, buckets);
+            m.merge(b, 1, Integer::sum);
+        }
+        return m;
