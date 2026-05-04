@@ -610,3 +610,54 @@ public final class VoltDosJarvisLab {
 
     public static int parseIntOr(String s, int dflt) {
         try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException ex) {
+            return dflt;
+        }
+    }
+
+    public static long parseLongOr(String s, long dflt) {
+        try {
+            return Long.parseLong(s);
+        } catch (NumberFormatException ex) {
+            return dflt;
+        }
+    }
+
+    public static double parseDoubleOr(String s, double dflt) {
+        try {
+            return Double.parseDouble(s);
+        } catch (NumberFormatException ex) {
+            return dflt;
+        }
+    }
+
+    public static String repeatChar(char c, int n) {
+        StringBuilder sb = new StringBuilder(n);
+        for (int i = 0; i < n; i++) {
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+
+    public static String banner(String title) {
+        String line = repeatChar('=', Math.min(72, title.length() + 8));
+        return line + "\n  " + title + "\n" + line;
+    }
+
+    public static List<String> wrapText(String text, int width) {
+        List<String> lines = new ArrayList<>();
+        String[] words = text.split("\\s+");
+        StringBuilder cur = new StringBuilder();
+        for (String w : words) {
+            if (cur.length() + w.length() + 1 > width) {
+                lines.add(cur.toString());
+                cur.setLength(0);
+            }
+            if (cur.length() > 0) {
+                cur.append(' ');
+            }
+            cur.append(w);
+        }
+        if (cur.length() > 0) {
+            lines.add(cur.toString());
