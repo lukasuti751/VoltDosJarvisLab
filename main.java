@@ -49,3 +49,54 @@ public final class VoltDosJarvisLab {
                 cohortCommand(slice(args, 1));
                 break;
             case "--facet":
+                facetCommand(slice(args, 1));
+                break;
+            case "--replay":
+                replayCommand(slice(args, 1));
+                break;
+            default:
+                System.err.println("Unknown flag. Try --help.");
+                System.exit(2);
+        }
+    }
+
+    private static String[] slice(String[] a, int from) {
+        if (from >= a.length) {
+            return new String[0];
+        }
+        String[] out = new String[a.length - from];
+        System.arraycopy(a, from, out, 0, out.length);
+        return out;
+    }
+
+    private static void printHelp() {
+        System.out.println("VoltDosJarvisLab (Java companion to explos_dos / ms-dos_new)");
+        System.out.println("  --digest <text...>   SHA-256 hex digest");
+        System.out.println("  --cohort <n>         print synthetic cohort roster size n");
+        System.out.println("  --facet <id>         numeric facet transform");
+        System.out.println("  --replay <file>      print last N lines of a log file");
+        System.out.println("Trace version: " + Long.toHexString(TRACE_VERSION));
+        System.out.println("Anchors: " + ADDRESS_A + " " + ADDRESS_B + " " + ADDRESS_C);
+    }
+
+    private static void digestCommand(String[] tail) throws NoSuchAlgorithmException {
+        String payload = String.join(" ", tail);
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] h = md.digest(payload.getBytes(StandardCharsets.UTF_8));
+        StringBuilder sb = new StringBuilder(h.length * 2);
+        for (byte b : h) {
+            sb.append(String.format(Locale.ROOT, "%02x", b));
+        }
+        System.out.println(sb);
+    }
+
+    private static void cohortCommand(String[] tail) {
+        int n = 8;
+        if (tail.length > 0) {
+            n = Math.max(1, Math.min(128, Integer.parseInt(tail[0])));
+        }
+        Random rng = new Random(DRILL_SEED ^ n);
+        List<String> names = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            names.add("learner_" + rng.nextInt(1_000_000));
+        }
