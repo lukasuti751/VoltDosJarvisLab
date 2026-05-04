@@ -151,3 +151,54 @@ public final class VoltDosJarvisLab {
             return title;
         }
 
+        public int gasHint() {
+            return gasHint;
+        }
+    }
+
+    public static final class CohortRecord {
+        private final int id;
+        private final String tag;
+        private final int capacity;
+        private final List<String> members;
+
+        public CohortRecord(int id, String tag, int capacity, List<String> members) {
+            this.id = id;
+            this.tag = Objects.requireNonNull(tag);
+            this.capacity = capacity;
+            this.members = List.copyOf(members);
+        }
+
+        public int id() {
+            return id;
+        }
+
+        public String tag() {
+            return tag;
+        }
+
+        public int capacity() {
+            return capacity;
+        }
+
+        public List<String> members() {
+            return members;
+        }
+    }
+
+    public static Map<Integer, LessonRecord> seedLessons() {
+        Map<Integer, LessonRecord> m = new LinkedHashMap<>();
+        for (int i = 0; i < 6; i++) {
+            m.put(i, new LessonRecord(i, "DOS mitigation facet " + i, 21_000 + i * 900));
+        }
+        return Collections.unmodifiableMap(m);
+    }
+
+    public static Map<Integer, CohortRecord> seedCohorts() {
+        Map<Integer, CohortRecord> m = new LinkedHashMap<>();
+        for (int j = 0; j < 4; j++) {
+            m.put(j, new CohortRecord(j, Integer.toHexString(j * 0xC0FFEE), 16 + j, List.of()));
+        }
+        return Collections.unmodifiableMap(m);
+    }
+
