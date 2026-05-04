@@ -304,3 +304,54 @@ public final class VoltDosJarvisLab {
     }
 
     public static List<Integer> facetSeries(int count) {
+        List<Integer> out = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) {
+            out.add((int) ((i ^ DRILL_SEED) & 0x7fff));
+        }
+        return out;
+    }
+
+    public static Map<String, Long> histogram(List<String> words) {
+        return words.stream()
+                .collect(Collectors.groupingBy(w -> w, Collectors.counting()));
+    }
+
+    public static String prettyJson(Map<String, Object> map) {
+        StringBuilder sb = new StringBuilder();
+        sb.append('{');
+        boolean first = true;
+        for (Map.Entry<String, Object> e : map.entrySet()) {
+            if (!first) {
+                sb.append(',');
+            }
+            first = false;
+            sb.append('"').append(e.getKey()).append("\":").append(e.getValue());
+        }
+        sb.append('}');
+        return sb.toString();
+    }
+
+    public static long traceVersion() {
+        return TRACE_VERSION;
+    }
+
+    public static long drillSeed() {
+        return DRILL_SEED;
+    }
+
+    public static String anchorA() {
+        return ADDRESS_A;
+    }
+
+    public static String anchorB() {
+        return ADDRESS_B;
+    }
+
+    public static String anchorC() {
+        return ADDRESS_C;
+    }
+
+    public static int compareLessons(LessonRecord a, LessonRecord b) {
+        return Integer.compare(a.gasHint(), b.gasHint());
+    }
+
