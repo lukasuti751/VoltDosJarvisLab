@@ -661,3 +661,54 @@ public final class VoltDosJarvisLab {
         }
         if (cur.length() > 0) {
             lines.add(cur.toString());
+        }
+        return lines;
+    }
+
+    public static Map<String, Object> contractHints() {
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("openCohort", "(bytes32,uint32)");
+        m.put("publishLesson", "(bytes32,uint32)");
+        m.put("heartbeat", "()");
+        m.put("probeBoundedSum", "(uint256[])");
+        m.put("anchors", summarizeAddresses());
+        return m;
+    }
+
+    public static void printContractHints() {
+        System.out.println(prettyJson(contractHints()));
+    }
+
+    public static int modPositive(int x, int m) {
+        int r = x % m;
+        return r < 0 ? r + m : r;
+    }
+
+    public static long gcd(long a, long b) {
+        while (b != 0) {
+            long t = a % b;
+            a = b;
+            b = t;
+        }
+        return Math.abs(a);
+    }
+
+    public static long lcm(long a, long b) {
+        if (a == 0 || b == 0) {
+            return 0;
+        }
+        return Math.abs(a / gcd(a, b) * b);
+    }
+
+    public static boolean isPrimeTrial(int n) {
+        if (n < 2) {
+            return false;
+        }
+        for (int f = 2; (long) f * f <= n; f++) {
+            if (n % f == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
