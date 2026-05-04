@@ -100,3 +100,54 @@ public final class VoltDosJarvisLab {
         for (int i = 0; i < n; i++) {
             names.add("learner_" + rng.nextInt(1_000_000));
         }
+        Collections.sort(names);
+        for (String s : names) {
+            System.out.println(s);
+        }
+    }
+
+    private static void facetCommand(String[] tail) {
+        long id = 0;
+        if (tail.length > 0) {
+            id = Long.parseLong(tail[0]);
+        }
+        long mixed = (id ^ DRILL_SEED) & 0xFFFFL;
+        System.out.println(mixed);
+    }
+
+    private static void replayCommand(String[] tail) throws IOException {
+        if (tail.length == 0) {
+            System.err.println("file path required");
+            return;
+        }
+        Path p = Path.of(tail[0]);
+        if (!Files.isRegularFile(p)) {
+            System.err.println("not a file");
+            return;
+        }
+        List<String> lines = Files.readAllLines(p, StandardCharsets.UTF_8);
+        int take = Math.min(32, lines.size());
+        for (int i = lines.size() - take; i < lines.size(); i++) {
+            System.out.println(lines.get(i));
+        }
+    }
+
+    public static final class LessonRecord {
+        private final int id;
+        private final String title;
+        private final int gasHint;
+
+        public LessonRecord(int id, String title, int gasHint) {
+            this.id = id;
+            this.title = Objects.requireNonNull(title);
+            this.gasHint = gasHint;
+        }
+
+        public int id() {
+            return id;
+        }
+
+        public String title() {
+            return title;
+        }
+
