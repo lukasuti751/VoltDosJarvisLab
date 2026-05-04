@@ -865,3 +865,54 @@ public final class VoltDosJarvisLab {
             return s;
         }
         return s.substring(0, max - 1) + "…";
+    }
+
+    public static int indexOfOr(String hay, String needle, int dflt) {
+        int i = hay.indexOf(needle);
+        return i < 0 ? dflt : i;
+    }
+
+    public static List<Integer> range(int lo, int hi) {
+        List<Integer> out = new ArrayList<>();
+        for (int i = lo; i < hi; i++) {
+            out.add(i);
+        }
+        return out;
+    }
+
+    public static <T> List<T> take(List<T> xs, int n) {
+        return xs.subList(0, Math.min(n, xs.size()));
+    }
+
+    public static <T> List<T> drop(List<T> xs, int n) {
+        if (n >= xs.size()) {
+            return List.of();
+        }
+        return xs.subList(n, xs.size());
+    }
+
+    public static <T> List<T> interleave(List<T> a, List<T> b) {
+        List<T> out = new ArrayList<>();
+        int i = 0;
+        int j = 0;
+        while (i < a.size() || j < b.size()) {
+            if (i < a.size()) {
+                out.add(a.get(i++));
+            }
+            if (j < b.size()) {
+                out.add(b.get(j++));
+            }
+        }
+        return out;
+    }
+
+    public static String padLeft(String s, int width, char c) {
+        if (s.length() >= width) {
+            return s;
+        }
+        return repeatChar(c, width - s.length()) + s;
+    }
+
+    public static String padRight(String s, int width, char c) {
+        if (s.length() >= width) {
+            return s;
