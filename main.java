@@ -814,3 +814,54 @@ public final class VoltDosJarvisLab {
             m.merge(b, 1, Integer::sum);
         }
         return m;
+    }
+
+    public static double mean(List<Double> xs) {
+        return xs.stream().mapToDouble(Double::doubleValue).average().orElse(0);
+    }
+
+    public static double variance(List<Double> xs) {
+        if (xs.size() < 2) {
+            return 0;
+        }
+        double m = mean(xs);
+        double acc = 0;
+        for (double x : xs) {
+            double d = x - m;
+            acc += d * d;
+        }
+        return acc / (xs.size() - 1);
+    }
+
+    public static List<Double> normalize01(List<Double> xs) {
+        double min = xs.stream().mapToDouble(Double::doubleValue).min().orElse(0);
+        double max = xs.stream().mapToDouble(Double::doubleValue).max().orElse(1);
+        double span = max - min;
+        if (span == 0) {
+            return xs.stream().map(x -> 0.0).collect(Collectors.toList());
+        }
+        return xs.stream().map(x -> (x - min) / span).collect(Collectors.toList());
+    }
+
+    public static String jsonQuote(String s) {
+        return '"' + s.replace("\\", "\\\\").replace("\"", "\\\"") + '"';
+    }
+
+    public static String toJsonArray(List<String> items) {
+        return items.stream().map(VoltDosJarvisLab::jsonQuote).collect(Collectors.joining(",", "[", "]"));
+    }
+
+    public static boolean allAscii(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) > 127) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static String truncate(String s, int max) {
+        if (s.length() <= max) {
+            return s;
+        }
+        return s.substring(0, max - 1) + "…";
